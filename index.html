@@ -1,12 +1,103 @@
-<h1>Bienvenidos al proyectode registro laboral, un programa para el curso de construccion de software++</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Laboral</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f2f2f2;
+        }
+        h1, h2, h4 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        button:hover {
+            background-color: #005f99;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        hr {
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
 
-<h1>INTEGRANTES:</h1>
-<H4>JUAN SEBASTIAN GUTIERREZ LOPEZ (71040937@continental.edu.pe)</H4>
-<H4>MARCOS JAVIER LEON ROJAS (71481637@continental.edu.pe)</H4>
-<H4>ELÍ NELSON MANDUJANO CONDOR (42231772@continental.edu.pe)</H4>
-<H4>JOSE FRANCISCO PERALTA TADEY (45479288@continental.edu.pe)</H4>
-<H4>DONY ABNER RIVERA SALAZAR (45086023@continental.edu.pe)</H4>
- 
- 
- 
+    <h1>Bienvenidos al proyecto de registro laboral, un programa para el curso de construcción de software++</h1>
+    <h2>INTEGRANTES:</h2>
+    <h4>JUAN SEBASTIAN GUTIERREZ LOPEZ (71040937@continental.edu.pe)</h4>
+    <h4>MARCOS JAVIER LEON ROJAS (71481637@continental.edu.pe)</h4>
+    <h4>ELÍ NELSON MANDUJANO CONDOR (42231772@continental.edu.pe)</h4>
+    <h4>JOSE FRANCISCO PERALTA TADEY (45479288@continental.edu.pe)</h4>
+    <h4>DONY ABNER RIVERA SALAZAR (45086023@continental.edu.pe)</h4>
 
+    <hr>
+
+    <h2>Formulario de Registro - Empleados</h2>
+    <form id="form-empleado">
+        <label for="nombre">Nombre o DNI:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="entrada">Hora de Entrada:</label>
+        <input type="time" id="entrada" name="entrada" required>
+
+        <label for="salida">Hora de Salida:</label>
+        <input type="time" id="salida" name="salida" required>
+
+        <button type="submit">Registrar Horario</button>
+    </form>
+
+    <h2>Formulario de Recursos Humanos</h2>
+    <form id="form-rh">
+        <label for="area">Área de Trabajo:</label>
+        <input type="text" id="area" name="area" required>
+
+        <label for="tarifa">Tarifa por Hora (S/):</label>
+        <input type="number" id="tarifa" name="tarifa" step="0.01" required>
+
+        <button type="submit">Registrar Tarifa</button>
+    </form>
+
+    <h2>Reporte Semanal (Ejemplo)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Empleado</th>
