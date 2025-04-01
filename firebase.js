@@ -22,11 +22,13 @@
   //export const auth = getAuth(app);
   export const db   = getFirestore(app);
 
-  export const registroRef     =collection(db,'RegistroLaboral')
+  export const registroRef     = collection(db,'RegistroLaboral')
 
   /*Save a New registro in Firestore con metodo addDoc() este metodo no necesita o requiere un id, la base de datos lo pone por defecto*/ 
   export const guardarRegistro        = (employed_id,input_work,output_work,status)=>{addDoc(collection(db,'RegistroLaboral'),{employed_id,input_work,output_work,status})}
 
   export const traerConsulta    = (employed_id)=>{return getDocs(query(registroRef,where("employed_id", "==",employed_id), where("status", "==", false), orderBy('input_work','desc')))}
+//suscripciona efecto inmediato
 
+export const onGetRegistroLaboral     = (callback)=> onSnapshot(collection(db,'RegistroLaboral'),callback)
   //guardarRegistro("42231772","8:00 hr..","16:00 hr.",false);
