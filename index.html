@@ -11,8 +11,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/434a77214b.js" crossorigin="anonymous"></script>
-    <!--Style para grid js-->
-    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet"/>
+    <!--Style para la tabla datable js-->
     <link rel="stylesheet" href="dataTable.css">
     <style>
         body {
@@ -90,8 +89,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#empleados">Empleados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#rrhh">Tarifas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#rrhh">RRHH</a></li>
                     <li class="nav-item"><a class="nav-link" href="#reporte">Reporte</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#rrhh">Integrantes</a></li>
                 </ul>
             </div>
         </div>
@@ -105,88 +106,72 @@
 
     <div class="container my-5">
 
-        <!-- Integrantes -->
-        <div class="card p-4 mb-4">
-            <h4 class="section-title mb-3">INTEGRANTES:</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">JUAN SEBASTIAN GUTIERREZ LOPEZ (71040937@continental.edu.pe)</li>
-                <li class="list-group-item">MARCOS JAVIER LEON ROJAS (71481637@continental.edu.pe)</li>
-                <li class="list-group-item">ELÍ NELSON MANDUJANO CONDOR (42231772@continental.edu.pe)</li>
-                <li class="list-group-item">JOSE FRANCISCO PERALTA TADEY (45479288@continental.edu.pe)</li>
-                <li class="list-group-item">DONY ABNER RIVERA SALAZAR (45086023@continental.edu.pe)</li>
-            </ul>
-        </div>
-
         <!-- Empleados -->
+        <div id="dataTableEmpleados">
+        </div><br>
 
         <!-- Recursos Humanos -->
-        <div id="rrhh" class="card p-4 mb-4">
-            <h4 class="section-title mb-3">Formulario de Recursos Humanos</h4>
-            <form id="form1" class="form1">
-                <datalist id="colaborador">
-                    <option value="Angela">
-                    <option value="Alexandra">
-                    <option value="Rocio">
-                    <option value="Mariela">
-                    <option value="Xiomara">
-                    <option value="Heinz">
-                    <option value="Elí">
-                </datalist>
-                <div class="cajota">
-                    <div class="cajita2">
-                        <div class="cajita">
-                            <label for="input_work">Entrada :</label>
-                            <input class="fecha" type="datetime-local" id='input_work' required>
-                            <label for="output_work">Salida :</label>
-                            <input class="fecha" type="datetime-local" id='output_work' required>
-                        </div>
-        
-                        <label for="employed_id">DNI:</label>
-                        <input type="text" list="colaborador" name="car" id="employed_id" required>
-                    </div>
-                    <div id="container-btn" class="container-btn">
-                        <button id="boton-task-save" class="boton"><i class="fa-solid fa-floppy-disk"></i></button>
-                    </div>
+        <div id="rrhh">
+            <h4 class="section-title mb-3">Formulario registro de ingreso/salida:</h4>
+            <form id="form1" class="form">
+                <div class="input-group">
+                    <label for="employed_id">DNI:</label>
+                    <input type="text" list="colaborador" name="car" id="employed_id" required>
                 </div>
-            </form><br>
-        </div>
+                <div class="input-group">
+                    <label for="input_work">Entrada :</label>
+                    <input class="fecha" type="datetime-local" id='input_work' required>
+                </div>
+                <div class="input-group">
+                    <label for="output_work">Salida :</label>
+                    <input class="fecha" type="datetime-local" id='output_work' required>
+                </div>
+
+                <div class="input-group">
+                    <button id="boton-task-save" class="boton"><i class="fa-solid fa-floppy-disk"></i></button>
+                </div>
+            </form>
+        </div><br>
 
         <!-- Reporte -->
-        <form action="" class="form2">
-            <datalist id="colaborador">
-                <option value="Angela">
-                <option value="Alexandra">
-                <option value="Rocio">
-                <option value="Mariela">
-                <option value="Xiomara">
-                <option value="Heinz">
-                <option value="Elí">
-                <option value="Alison">
-    
-            </datalist>
-            <input type="text" list="colaborador" id="employed_id">
-            <button id="boton">Consultar</button>
-            <label id="acumulador" class="hora">Horas</label>
-            <label id="salario" class="hora">Horas.</label>
-        </form>
 
-        <div id="reporte" class="card p-4 mb-4">
-            <h4 class="section-title mb-3">Reporte Semanal (Ejemplo)</h4>
-            <div class="table table-striped" id="table"></div> <!--aca se colocara la tabla de grid js-->
-        </div>
+
 
     </div>
 
-    <div>
-        <table id="dataTable" class="datatable"></table>
-      </div>
+    <div id="reporte" class="card p-4 mb-4">
+        <h4 class="section-title mb-3">Listado de registros:</h4>
+        <div id="dataTableRegistro"></div>
+        
+    </div><br>
 
-    
 
 
-    
 
-    
+    <!-- The Modal-->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Detalle:</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <!-- Aqui se insertara codigo elementos html creados js -->
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 
 
@@ -194,13 +179,11 @@
     <footer>
         <p>Registro Laboral | Proyecto de Construcción de Software++ - 2025</p>
     </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="firebase.js" type="module"></script>
-    <!-- Grid JS -->
-    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
-    <!-- script -->
+    <!-- script registro empleados -->
+    <script type="module" src="./empleados.js"></script>
+    <!-- script registro -->
     <script type="module" src="./jornada.js"></script>
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
