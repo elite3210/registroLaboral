@@ -1,30 +1,38 @@
-import { guardarRegistro, onGetRegistroLaboral } from './firebase.js'
+import { guardarRegistro, onGetRegistroLaboral } from './firebase.js';
 import { Datatable } from './dataTable.js';
+import { db } from './firebase.js';
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
-
-//llamando a la funcion traer consulta que incluye la tabla grid js
-const boton = document.getElementById('boton');
-let acumulador = document.getElementById('acumulador');
-
-//para guaradr los registo en firebase
-const tareaForm = document.getElementById('form1')
-
+// 📌 GUARDAR REGISTRO DESDE FORMULARIO
+const tareaForm = document.getElementById('form1');
 tareaForm.addEventListener('submit', (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const input_work = tareaForm['input_work'].value;
     const output_work = tareaForm['output_work'].value;
-    const employed_id = tareaForm['employed_id'].value;
-    let status = false;
+    const employed_id = tareaForm['employed_id'].value.trim();
 
-    guardarRegistro(employed_id.trim(), input_work, output_work, status)
-    tareaForm.reset()
-})
+    if (!employed_id || !input_work || !output_work) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
 
+    if (isNaN(Date.parse(input_work)) || isNaN(Date.parse(output_work))) {
+        alert("Formato de fecha no válido.");
+        return;
+    }
 
-//traer los datos de la coleccion Registrolaboral
-const registroLaboral = onGetRegistroLaboral((querySnapshot) => {
+    if (input_work >= output_work) {
+        alert("La hora de entrada debe ser menor que la hora de salida.");
+        return;
+    }
 
+    guardarRegistro(employed_id, input_work, output_work, false);
+    tareaForm.reset();
+});
+
+// 📌 MOSTRAR LISTADO DE REGISTROS EN TABLA
+onGetRegistroLaboral((querySnapshot) => {
     const items = [];
 
     if (querySnapshot) {
@@ -33,22 +41,82 @@ const registroLaboral = onGetRegistroLaboral((querySnapshot) => {
             obj.id = doc.id;
             obj.values = doc.data();
             items.push(obj);
-        })
+        });
+    }
+
+    const titulo = {
+        ' ': '',
+        CODIGO: 'employed_id',
+        ENTRADA: 'input_work',
+        SALIDA: 'output_work'
     };
-    console.log('datos firebase traido:', items);
 
+    const dt = new Datatable('#dataTableRegistro', [
+        { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); editProduct(elementos); } },
+        { id: 'dtnDelete', text: 'delete', icon: 'delete', action: function () { const elementos = dt.getSelected(); eliminarProducto(elementos); } },
+        { id: 'dtnDuplicar', text: 'clonar', icon: 'content_copy', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); clonarProduct(elementos); } },
+        { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); /*createProduct()*/ } },
+        { id: 'brnView', text: 'ver', icon: 'contract', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); viewProduct(elementos); } }
+    ]);
 
-    const titulo = { ' ': '', CODIGO: 'employed_id', ENTRADA: 'input_work', SALIDA: 'output_work'}
-    const dt = new Datatable('#dataTableRegistro',
-        [
-            { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); editProduct(elementos) } },
-            //{ id: 'btnBarcode', text: 'barcode', icon: 'barcode',targetModal:'#myModal', action: function () { const elementos = dt.getSelected(); pintarBarcode(elementos); } },
-            { id: 'dtnDelete', text: 'delete', icon: 'delete', action: function () { const elementos = dt.getSelected(); eliminarProducto(elementos) } },
-            { id: 'dtnDuplicar', text: 'clonar', icon: 'content_copy', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); clonarProduct(elementos) } },
-            { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); /*createProduct()*/ } },
-            { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); viewProduct(elementos) } }
-        ]
-    );
     dt.setData(items, titulo);
     dt.makeTable();
 });
+
+// 📌 FUNCIÓN PARA GENERAR REPORTE SEMANAL CON MONEDA EN SOLES
+export async function generarReporteSemanal(dniEmpleado) {
+    const registrosRef = collection(db, "RegistroLaboral");
+    const empleadosRef = collection(db, "Empleados");
+
+    const q = query(registrosRef, where("employed_id", "==", dniEmpleado));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+        document.getElementById("reporteSemanal").innerHTML = `
+            <p class="text-danger">No se encontraron registros para el código <strong>${dniEmpleado}</strong>.</p>`;
+        return;
+    }
+
+    let totalHoras = 0;
+    let registrosInvalidos = 0;
+
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const entrada = new Date(data.input_work);
+        const salida = new Date(data.output_work);
+
+        if (!isNaN(entrada) && !isNaN(salida)) {
+            const horasTrabajadas = (salida - entrada) / (1000 * 60 * 60);
+            totalHoras += horasTrabajadas;
+        } else {
+            registrosInvalidos++;
+        }
+    });
+
+    const tq = query(empleadosRef, where("employed_id", "==", dniEmpleado));
+    const tarifaSnapshot = await getDocs(tq);
+
+    let tarifaHora = 0;
+
+    if (!tarifaSnapshot.empty) {
+        tarifaSnapshot.forEach((doc) => {
+            tarifaHora = doc.data().tarifaHora || 10;
+        });
+    } else {
+        tarifaHora = 10;
+    }
+
+    const montoTotal = totalHoras * tarifaHora;
+
+    const reporteDiv = document.getElementById("reporteSemanal");
+    reporteDiv.innerHTML = `
+        <p><strong>Código:</strong> ${dniEmpleado}</p>
+        <p><strong>Total de horas trabajadas:</strong> ${totalHoras.toFixed(2)} hs</p>
+        <p><strong>Tarifa por hora:</strong> S/${tarifaHora}</p>
+        <p><strong>Total estimado a cobrar:</strong> S/${montoTotal.toFixed(2)}</p>
+    `;
+
+    if (registrosInvalidos > 0) {
+        reporteDiv.innerHTML += `<p class="text-warning">${registrosInvalidos} registro(s) fueron ignorados por tener formato inválido.</p>`;
+    }
+}
