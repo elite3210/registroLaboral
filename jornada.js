@@ -3,30 +3,42 @@ import { Datatable } from './dataTable.js';
 import { db } from './firebase.js';
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
-// 📌 GUARDAR REGISTRO DESDE FORMULARIO
+// 📌 GUARDAR REGISTRO DESDE FORMULARIO CON VALIDACIONES
 const tareaForm = document.getElementById('form1');
-tareaForm.addEventListener('submit', (e) => {
+
+tareaForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const input_work = tareaForm['input_work'].value;
     const output_work = tareaForm['output_work'].value;
     const employed_id = tareaForm['employed_id'].value.trim();
 
+    // VALIDACIONES
     if (!employed_id || !input_work || !output_work) {
-        alert("Por favor, completa todos los campos.");
+        alert("Todos los campos son obligatorios.");
         return;
     }
 
-    if (isNaN(Date.parse(input_work)) || isNaN(Date.parse(output_work))) {
-        alert("Formato de fecha no válido.");
+    const dniRegex = /^[0-9]{8}$/;
+    if (!dniRegex.test(employed_id)) {
+        alert("El DNI debe tener exactamente 8 dígitos numéricos.");
         return;
     }
 
-    if (input_work >= output_work) {
+    const entrada = new Date(input_work);
+    const salida = new Date(output_work);
+
+    if (isNaN(entrada) || isNaN(salida)) {
+        alert("Las fechas ingresadas no son válidas.");
+        return;
+    }
+
+    if (entrada >= salida) {
         alert("La hora de entrada debe ser menor que la hora de salida.");
         return;
     }
 
+    // ✅ Guardar en Firebase
     guardarRegistro(employed_id, input_work, output_work, false);
     tareaForm.reset();
 });
@@ -63,7 +75,7 @@ onGetRegistroLaboral((querySnapshot) => {
     dt.makeTable();
 });
 
-// 📌 FUNCIÓN PARA GENERAR REPORTE SEMANAL CON MONEDA EN SOLES
+// 📌 FUNCIONALIDAD PARA REPORTE SEMANAL CON MONEDA EN SOLES
 export async function generarReporteSemanal(dniEmpleado) {
     const registrosRef = collection(db, "RegistroLaboral");
     const empleadosRef = collection(db, "Empleados");
