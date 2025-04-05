@@ -1,0 +1,455 @@
+/* Estilos para la pantalla de inicio */
+.intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .logo-circle {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #0a0f1c, #1c2333);
+    box-shadow: 0 0 30px rgba(0, 170, 255, 0.7),
+                inset 0 0 20px rgba(0, 170, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotateAndGlow 2.5s ease-in-out forwards;
+  }
+  
+  .logo-circle span {
+    color: #e0f7ff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+    opacity: 0;
+    animation: fadeInText 1s ease-in 1.5s forwards;
+  }
+  
+  /* Animaciones */
+  @keyframes rotateAndGlow {
+    0% {
+      transform: rotate(0deg) scale(0.5);
+      box-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+      box-shadow: 0 0 50px rgba(0, 170, 255, 0.9);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      box-shadow: 0 0 30px rgba(0, 170, 255, 0.7);
+    }
+  }
+  
+  @keyframes fadeInText {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeOutIntro {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  
+  /* Estilos principales */
+  :root {
+    --primary-color: #00aaff;
+    --primary-dark: #0077cc;
+    --background: #0a0f1c;
+    --card-bg: #1c2333;
+    --text-color: #e0f7ff;
+    --input-bg: #2a3448;
+    --border-color: #337ab7;
+    --error-color: #ff6b6b;
+    --success-color: #6bff6b;
+    --info-color: #6bd5ff;
+    --sidebar-bg: #151a28;
+    --list-bg: #1e2435;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--text-color);
+    min-height: 100vh;
+  }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .main-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .header-box {
+    background-color: #13203a;
+    border-left: 6px solid var(--primary-color);
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+    text-align: center;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .header-box h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    color: #9fcff7;
+  }
+  
+  .main-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .card {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .animated-card {
+    animation: scaleIn 0.5s ease-out;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    position: relative;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #b9dfff;
+  }
+  
+  form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #005a99;
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  form input:focus, form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.2);
+  }
+  
+  form input::placeholder {
+    color: #aac9e6;
+  }
+  
+  .error-message {
+    color: var(--error-color);
+    font-size: 0.8rem;
+    display: block;
+    height: 16px;
+  }
+  
+  button.submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  button.submit-btn:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .confirmation {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(107, 255, 107, 0.1);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .version {
+    font-size: 0.8rem;
+    color: #6b8baa;
+    margin-top: 5px;
+  }
+  
+  /* Interfaz de Registro */
+  .registro-interface {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .registro-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  .empleados-list {
+    grid-column: 1;
+    grid-row: 2;
+    background-color: var(--list-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .registro-sidebar {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    background-color: var(--sidebar-bg);
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .date-filter {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 5px;
+    color: white;
+  }
+  
+  .registros-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .registro-item {
+    background-color: var(--card-bg);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    position: relative;
+  }
+  
+  .registro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .delete-btn {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    transition: transform 0.2s;
+  }
+  
+  .delete-btn:hover {
+    transform: scale(1.2);
+  }
+  
+  .registro-item p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+  }
+  
+  .empleados-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .empleado-card {
+    background-color: var(--card-bg);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .empleado-card:hover {
+    transform: translateY(-3px);
+  }
+  
+  .empleado-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+  }
+  
+  .time-now-btn {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  
+  .time-now-btn:hover {
+    background: var(--primary-dark);
+  }
+  
+  .dual-time-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .action-buttons button {
+    flex: 1;
+  }
+  
+  /* Animaciones */
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .registro-interface {
+      grid-template-columns: 1fr;
+    }
+    
+    .registro-sidebar {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    
+    .empleados-list {
+      grid-row: 2;
+    }
+    
+    .dual-time-input {
+      grid-template-columns: 1fr;
+    }
+    
+    .logo-circle {
+      width: 200px;
+      height: 200px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header-box h1 {
+      font-size: 1.8rem;
+    }
+    
+    .card {
+      padding: 20px;
+    }
+    
+    .logo-circle {
+      width: 180px;
+      height: 180px;
+    }
+    
+    .logo-circle span {
+      font-size: 1.5rem;
+    }
+  }
