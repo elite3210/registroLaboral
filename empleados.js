@@ -1,12 +1,10 @@
-import {guardarEmpleados, onGetEmpleados } from './firebase.js'
+import {guardarEmpleados, onGetEmpleados, updateEmployed, deleteEmployed } from './firebase.js'
 import { Datatable } from './dataTable.js';
 
-const modalBody = document.querySelector('.modal-body');
-const modalFooter = document.querySelector('.modal-footer');
+
 let editStatus = false;
 //traer los datos de la coleccion Registrolaboral
 const empleados = onGetEmpleados((querySnapshot) => {
-
     const items = [];
 
     if (querySnapshot) {
@@ -17,27 +15,28 @@ const empleados = onGetEmpleados((querySnapshot) => {
             items.push(obj);
         })
     };
-    console.log('datos firebase traido:', items);
+    
+    sincronizarLocalStorage(items,'empleadosLS')
 
 
-    const titulo = { ' ': '', CODIGO: 'employed_id', NOMBRES: 'names', APELLIDOS: 'surnames', NACIMIENTO:'birth', EMAIL:'email',TELEFONO:'phone'}
+    const titulo = {CODIGO: 'employed_id', NOMBRES: 'names', APELLIDOS: 'surnames', NACIMIENTO:'birth', EMAIL:'email',TELEFONO:'phone'}
     const dt = new Datatable('#dataTableEmpleados',
-        [
-            { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); editProduct(elementos) } },
-            //{ id: 'btnBarcode', text: 'barcode', icon: 'barcode',targetModal:'#myModal', action: function () { const elementos = dt.getSelected(); pintarBarcode(elementos); } },
-            { id: 'dtnDelete', text: 'delete', icon: 'delete', action: function () { const elementos = dt.getSelected(); eliminarProducto(elementos) } },
-            { id: 'dtnDuplicar', text: 'clonar', icon: 'content_copy', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); clonarProduct(elementos) } },
-            { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); crearEmpleado() } },
-            { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); viewProduct(elementos) } }
+        [   
+            { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); viewProduct(elementos2) } },
+            { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); crearModalEmpleado() } },
+            { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); editEmpleado(elementos2) } },
+            { id: 'dtnDelete', text: 'delete', icon: 'delete',targetModal: '#myModal',action: function () { const elementos2 = dt.getSelected(); eliminarProducto(elementos2) } }
         ]
     );
     dt.setData(items, titulo);
-    dt.makeTable();
+    dt.makeTable2();
+
+    renderDatalist(items)
 });
 
-function crearEmpleadoFirebase(e) {
-    e.preventDefault()
-    console.log('dentro funcion crearEmpleadoFirebase:', editStatus);
+function crearEmpleadoFirebase(elementos2) {
+    //e.preventDefault()
+    console.log('dentro funcion crearEmpleadoFirebase:', editStatus,elementos2);
     const formModal=document.getElementById('employed-form');
     const btnSend=document.getElementById('btn-send');
 
@@ -65,8 +64,9 @@ function crearEmpleadoFirebase(e) {
         modal.hide()
         //showMessage(`Se creo y guardó un nuevo producto:${codigo}`,'success')
     } else {
+        let id = elementos2.id;
         console.log('entre a else de actualizar id:', id);
-        updateProduct(id, {
+        updateEmployed(id, {
             employed_id:employed_id,
             names:names,
             surnames:surnames,
@@ -86,16 +86,13 @@ function crearEmpleadoFirebase(e) {
     formModal.innerHTML = ''
 };
 
-
-
-function formularioEmpleados() {
+export function formularioEmpleados() {
     //creando elementos html para meterlo al modal
     const formContainer=document.createElement('div');
     formContainer.setAttribute('class','container');
-    modalBody.appendChild(formContainer);
+    
     let formularioEmpleado = `
     <form class="form" id="employed-form">
-
                 <div class="input-group">
                     <label class="input-group-text" for="employed_id" >DNI :</label>
                     <input class='form-control' type="text" id='employed_id' required>
@@ -120,32 +117,82 @@ function formularioEmpleados() {
                     <label class="input-group-text" for="phone" >Telefono :</label>
                     <input class='form-control' type="text" id='phone'>
                 </div>
-
     </form>
-    
-    
     `;
-    //const formProduct =document.getElementById('')
+
     formContainer.innerHTML = formularioEmpleado;
+    return formContainer;
 }
 
-function crearEmpleado() {
+function crearModalEmpleado(elementos2) {
+    editStatus = false;
+    const modalBody = document.querySelector('.modal-body');
+    const modalFooter = document.querySelector('.modal-footer');
     clearHTML(modalBody);
     clearHTML(modalFooter);
-    formularioEmpleados();//funcion que renderiza el formulario para crear y editar producto
-    //const formModal=document.getElementById('tarea-form');
+    modalBody.appendChild(formularioEmpleados());//funcion que renderiza el formulario para crear y editar producto
+
     const btnSend=document.createElement('button');
     btnSend.setAttribute('id','btn-send');
     btnSend.setAttribute('class','btn btn-primary');
-    btnSend.addEventListener('click',crearEmpleadoFirebase)
+    btnSend.addEventListener('click',()=>crearEmpleadoFirebase(elementos2))
     modalFooter.appendChild(btnSend);           
-
-    editStatus = false;
     btnSend.textContent = 'Guardar'
 };
 
-function clearHTML(elemento) {
+export function clearHTML(elemento) {
     while (elemento.firstChild) {
         elemento.removeChild(elemento.firstChild)
     }
 };
+
+function sincronizarLocalStorage(objInput, nameString) {
+    console.log('sincronizando LS...')
+    localStorage.removeItem(nameString);
+    localStorage.setItem(nameString, JSON.stringify(objInput));
+};
+
+function editEmpleado(elementos2){
+    crearModalEmpleado(elementos2)
+    editStatus = true;
+    const formModal=document.getElementById('employed-form');
+    const btnSend=document.getElementById('btn-send');
+    btnSend.textContent = 'Actualizar';
+
+    formModal['employed_id'].value = elementos2['values'].employed_id;
+    const names = formModal['names'].value = elementos2['values'].names;
+    const surnames = formModal['surnames'].value = elementos2['values'].surnames;
+    const birth = formModal['birth'].value = elementos2['values'].birth;
+    const email = formModal['email'].value = elementos2['values'].email;
+    const phone = formModal['phone'].value = elementos2['values'].phone;
+}
+
+function eliminarEmpleado(elementos2){
+    crearModalEmpleado(elementos2)
+    editStatus = true;
+    const formModal=document.getElementById('employed-form');
+    const btnSend=document.getElementById('btn-send');
+    btnSend.textContent = 'Actualizar';
+
+    formModal['employed_id'].value = elementos2['values'].employed_id;
+    const names = formModal['names'].value = elementos2['values'].names;
+    const surnames = formModal['surnames'].value = elementos2['values'].surnames;
+    const birth = formModal['birth'].value = elementos2['values'].birth;
+    const email = formModal['email'].value = elementos2['values'].email;
+    const phone = formModal['phone'].value = elementos2['values'].phone;
+}
+
+function renderDatalist(items) {
+    const datalist = document.getElementById('colaborador');
+    clearHTML(datalist);
+    let html ='';
+
+    items.forEach(element => {
+        html +=`
+        <option value=${element['values'].employed_id}>${element['values'].names}</option>
+        `
+    });
+
+    datalist.innerHTML=html;
+
+}

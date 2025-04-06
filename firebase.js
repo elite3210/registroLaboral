@@ -32,3 +32,21 @@ export const guardarEmpleados = (employed_id, names, surnames, birth, email, pho
 export const onGetRegistroLaboral = (callback) => onSnapshot(collection(db, 'RegistroLaboral'), callback)
 export const onGetEmpleados = (callback) => onSnapshot(collection(db, 'Empleados'), callback)
 //guardarRegistro("42231772","8:00 hr..","16:00 hr.",false);
+
+/*metodo getDoc 'en singular' para traer un documento de firestore */
+export const getOneEmployed          = (id)=>getDoc(doc(db,'Empleados',id))
+
+//eliminar elemento del la coleccion:
+
+export function deleteRegistroLaboral(id){
+    deleteDoc(doc(db,'RegistroLaboral',id))
+};
+
+export function deleteEmployed(id){
+    deleteDoc(doc(db,'Empleados',id))
+};
+
+//actualizar firebase:
+export const updateEmployed    = (id,newFields)=>updateDoc(doc(db,'Empleados',id),newFields)
+
+

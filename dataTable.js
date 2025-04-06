@@ -19,7 +19,7 @@ export class Datatable {
         this.selected = [];
         this.numberOfEntries = 25;
         this.headerButtons = headerButtons;
-        let filaSeleccionada = null;
+        this.filaSeleccionada = null;
     }
 
     parse() {//este metodo lee una tabla en html y extrae sus datos
@@ -263,7 +263,7 @@ export class Datatable {
 
     };
 
-    renderRows() {//dibuja las filas
+    renderRows() {//dibuja las filas segun la cantidad de filas escogidas y en la pagina que se ecuentra
         
             this.element.querySelector('tbody').innerHTML='';//limpia el tbody
             //this.element.querySelector('tbody').addEventListener('click',()=>this.eventoClickFila())
@@ -312,22 +312,16 @@ export class Datatable {
                                 
                             }else{
                                 this.removeSelected(id);
-                                //mejorar si se hace check a dos fila apareden los button y si a uno de ellos se hace check false, entonces se quedan sin herramientas button
-                                //deberia borra cuando no haya nigun checked
                                 const buttonsContainer  = this.element.querySelector('.header-buttons-container');//seleccionada todos sin condicion, deberia la rednerizacion ser condicionada a cada tipo de sleccion
-                                buttonsContainer.innerHTML=''; //esto borra los headerButtons cuando se des-selecciona la fila.
-                                document.querySelector('.filaSeleccionada').classList.remove('filaSeleccionada')//borra la clase filla seleccionada para quitar los estilos que corresponden a este
+                                if(this.selected.length==0){buttonsContainer.innerHTML='';}; //esto borra los headerButtons cuando se des-selecciona la fila y no queden mas filas seleccionadas.
+                                //document.querySelector('.filaSeleccionada').classList.remove('filaSeleccionada')//borra la clase filla seleccionada para quitar los estilos que corresponden a este
                             }
-                            console.log('id: ',this.selected)
+                            console.log('item: ',this.selected)
                             
                         })
                     })
-    
-                    //listener para cada fila
-                    
                 }
             }
-
     };
 
     renderFilas() {//renderiza las filas
@@ -432,21 +426,20 @@ export class Datatable {
     };
     
     eventoClickFila() {//pinta la fila si se hace click
-
         const table = document.getElementById('dataTable');
         table.addEventListener('click',(e)=>{
             const fila = e.target.closest('tr');//es una expresión que busca el ancestro más cercano del elemento e.target que coincida con el selector CSS tr. 
-            console.log('e.target.closest(tr):',fila);
-            
+            //console.log('e.target.closest(tr):',fila);
             const id   = fila.getAttribute('data-id');
-            this.selected = [];
+            
             // Verificar si se hizo clic en una fila del tbody
             if (fila && fila.parentNode.tagName==='TBODY') {
-                if (this.filaSeleccionada===fila) {//ya existe una fila seleccionada
+                if (this.filaSeleccionada===fila) {//si ya existe una fila seleccionada
                     //si se hace click en la misma fila quitar selececcion
                     fila.classList.remove('filaSeleccionada');
                     this.filaSeleccionada=null;
-                    this.removeSelected(id);
+                    //this.removeSelected(id);
+                    this.selected = [];
                 } else {
                     // Quitar la selección de la fila anterior
                     if (this.filaSeleccionada) {
@@ -454,44 +447,17 @@ export class Datatable {
                     }
                     //al seleccionar nueva fila (primera vez) o no seleccionada
                     fila.classList.add('filaSeleccionada');
+                    this.selected = [];
                     const item  = this.getItem(id);
-                    this.selected.push(item)
+                    if(item){this.selected.push(item)}
                     this.filaSeleccionada=fila;
                 }
 
+                console.log('this.selected:',this.selected);
             }
 
-            console.log('this.selected:',this.selected);
         })
         
-    };
-
-    eventoClickFila2(id) {//pinta la fila si se hace click
-
-        const table = document.getElementById('dataTable');
-        let filaSeleccionada = null;
-        table.addEventListener('click',(e)=>{
-            const fila = e.target.closest('tr');
-            // Verificar si se hizo clic en una fila del tbody
-            if (fila && fila.parentNode.tagName==='tbody') {
-                if (filaSeleccionada===fila) {//ya existe una fila seleccionada
-                    //si se hace click en la misma fila quitar selececcion
-                    fila.classList.remove('filaSeleccionada');
-                    filaSeleccionada=null;
-                } else {
-                    // Quitar la selección de la fila anterior
-                    if (filaSeleccionada) {
-                        filaSeleccionada.classList.remove('filaSeleccionada');
-                    }
-                    //al seleccionar nueva fila o no seleccionada
-                    fila.classList.add('filaSeleccionada');
-                    filaSeleccionada=fila;
-                }
-
-            }
-        })
-        console.log('id:',id)
-
     };
 
     renderFooters() {//renderiza los titulos del tfoot auditoria se beria verificar si la columna es typeOf == numer, se suma y renderiza en tfoot
@@ -528,13 +494,13 @@ export class Datatable {
 
     getItem(id) {//tomar parametro un id y devuelve la coincidencia un obj     
         const res = this.items.filter(item => item.id == id)
-        if (res.length == 0) { return null }
-        //console.log('getitem:res',res);
-        return res[0];
+        if (res.length == 0) {return null;};
+        return res[0];//filter retorna array,entonces se elige el primer elemento del array con [0]
     };
 
     removeSelected(id) {//si deseleccionamos retira el elemento del arreglo
         const res = this.selected.filter(item => item.id !== id);
+        this.selected = [];
         this.selected = [...res];
         //console.log('remove this.selected',this.selected);
     };
