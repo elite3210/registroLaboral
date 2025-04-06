@@ -50,7 +50,6 @@ const registroLaboral = onGetRegistroLaboral((querySnapshot) => {
             obj.values = doc.data();
             let objetoEmpleado=empleados.filter(objeto=>objeto['values'].employed_id==obj['values'].employed_id)[0]
             obj['values'].nombres = objetoEmpleado ? objetoEmpleado['values'].names:'s/n';
-            console.log('trajosss:',obj['values'].nombres);
 
             items.push(obj);
         })

@@ -22,7 +22,7 @@ const empleados = onGetEmpleados((querySnapshot) => {
     const titulo = {CODIGO: 'employed_id', NOMBRES: 'names', APELLIDOS: 'surnames',TELEFONO:'phone'}
     const dt = new Datatable('#dataTableEmpleados',
         [   
-            { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); viewProduct(elementos2) } },
+            { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); viewEmpleado(elementos2) } },
             { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); crearModalEmpleado() } },
             { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); editEmpleado(elementos2) } },
             { id: 'dtnDelete', text: 'delete', icon: 'delete',targetModal: '#myModal',action: function () { const elementos2 = dt.getSelected(); eliminarEmpleado(elementos2) } }
@@ -198,4 +198,25 @@ const surnames = formModal['surnames'].value;
 const birth = formModal['birth'].value;
 const email = formModal['email'].value;
 const phone = formModal['phone'].value;
+}
+
+function viewEmpleado(arrayObj){
+    let id = arrayObj.id;
+    crearModalEmpleado(id);
+    editStatus = true;
+    const formModal=document.getElementById('employed-form');
+    const btnSend=document.getElementById('btn-send');
+    btnSend.textContent = 'Actualizar';
+
+    formModal['employed_id'].value  = arrayObj['values'].employed_id;
+    formModal['names'].value        = arrayObj['values'].names;
+    formModal['surnames'].value     = arrayObj['values'].surnames;
+    formModal['birth'].value        = arrayObj['values'].birth;
+    formModal['email'].value        = arrayObj['values'].email;
+    formModal['phone'].value        = arrayObj['values'].phone;
+
+    console.log('listo para visualizar detalle de empleado');
+
+    const modalFooter = document.querySelector('.modal-footer');
+    clearHTML(modalFooter);
 }
