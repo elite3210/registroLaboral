@@ -19,7 +19,7 @@ const empleados = onGetEmpleados((querySnapshot) => {
     sincronizarLocalStorage(items,'empleadosLS')
     //renderDatalist(items)
 
-    const titulo = {CODIGO: 'employed_id', NOMBRES: 'names', APELLIDOS: 'surnames', NACIMIENTO:'birth', EMAIL:'email',TELEFONO:'phone'}
+    const titulo = {CODIGO: 'employed_id', NOMBRES: 'names', APELLIDOS: 'surnames',TELEFONO:'phone'}
     const dt = new Datatable('#dataTableEmpleados',
         [   
             { id: 'brnView', text: 'nuevo', icon: 'contract', targetModal: '#myModal', action: function () { const elementos2 = dt.getSelected(); viewProduct(elementos2) } },

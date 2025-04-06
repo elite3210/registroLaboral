@@ -61,7 +61,7 @@ const registroLaboral = onGetRegistroLaboral((querySnapshot) => {
     //let stockProducto=productoCaliente.data().stock
 
     //datos para rendizar la tabla
-    const titulo = {'':'',CODIGO: 'employed_id', NOMBRES: 'nombres', ENTRADA: 'input_work', SALIDA: 'output_work' }
+    const titulo = {'':'',NOMBRES: 'nombres', ENTRADA: 'input_work', SALIDA: 'output_work' }
     const dt = new Datatable('#dataTableRegistro',
         [
             { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); editRegistroLaboral(elementos) } },

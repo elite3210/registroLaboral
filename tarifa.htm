@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Registro Laboral</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -13,11 +10,9 @@
     <!--Style para la tabla datable js-->
     <link rel="stylesheet" href="dataTable.css">
     <link rel="stylesheet" href="styles.css">
-
+    <title>Tarifas</title>
 </head>
-
 <body>
-
     <!-- Navbar -->
     <header>
         <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #539dff;">
@@ -25,7 +20,7 @@
                 <a class="nav-link" href="#" aria-expanded="false" role="button" data-bs-toggle="dropdown"><img
                         src="./logo_skieks_morado_claro.svg" alt="Logo" width="30" height="24"
                         class="d-inline-block align-text-top">
-                    Registro
+                    Tarifas
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="./employed.html">Empleados</a></li>
                         <li><a class="dropdown-item" href="./tarifa.htm">Tarifas</a></li>
@@ -65,43 +60,37 @@
         </nav>
     </header>
 
+    <!-- Recursos Humanos -->
+    <div id="rrhh" class="p-4 mb-4">
+        <h4 class="section-title mb-3">Formulario registro de tarifas:</h4>
+        <form id="tarifaForm" class="form">
+            <datalist id="cargos">
+                <option value="TO001"></option>
+                <option value="TJ001"></option>
+                <option value="TG001"></option>
+            </datalist>
 
-
-    <div class="container my-5">
-
-
-        <!-- Recursos Humanos -->
-        <div id="rrhh" class="p-4 mb-4">
-            <h4 class="section-title mb-3">Formulario registro de ingreso/salida:</h4>
-            <form id="form1" class="form">
-                <datalist id="colaborador">
-                </datalist>
-
-                <div class="input-group">
-                    <label for="employed_id">DNI:</label>
-                    <input type="text" list="colaborador" name="car" id="employed_id" required>
-                </div>
-                <div class="input-group">
-                    <label for="input_work">Entrada :</label>
-                    <input class="fecha" type="datetime-local" id='input_work' required>
-                </div>
-                <div class="input-group">
-                    <label for="output_work">Salida :</label>
-                    <input class="fecha" type="datetime-local" id='output_work' required>
-                </div>
-                <div class="input-group">
-                    <button id="boton-task-save" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div><br>
-
-        <!-- Reporte -->
-    </div>
-
-    <div id="dataTableRegistro"></div>
+            <div class="input-group">
+                <label for="job_id">Cargo Codigo:</label>
+                <input type="text" list="cargos" name="car" id="job_id" required>
+            </div>
+            <div class="input-group">
+                <label for="description_job">Descripcion cargo :</label>
+                <input class="fecha" type="text" id='description_job' required>
+            </div>
+            <div class="input-group">
+                <label for="price_hour">Precio x Hora :</label>
+                <input class="fecha" type="number" step="0.1" id='price_hour' required>
+            </div>
+            <div class="input-group">
+                <button id="boton-task-save" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div><br>
 
 
 
+    <div id="dataTableTarifas"></div>
 
     <!-- The Modal-->
     <div class="modal" id="myModal">
@@ -109,7 +98,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Detalle:</h4>
+                    <h4 class="modal-title">Detalle Tarifas:</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <!-- Modal Body -->
@@ -123,16 +112,8 @@
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>Registro Laboral | Proyecto de Construcción de Software++ - 2025</p>
-    </footer>
-
-    <!-- script registro de horas de entrada y salida -->
-    <script type="module" src="./jornada.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
+<script type="module" src="./tarifas.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </html>

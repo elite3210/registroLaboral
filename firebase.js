@@ -21,17 +21,22 @@ const app = initializeApp(firebaseConfig);
 //export const app  = initializeApp(firebaseConfig);
 //export const auth = getAuth(app);
 export const db = getFirestore(app);
-
+//creacion de la tabla o coleccion:
 export const registroRef = collection(db, 'RegistroLaboral');
 export const empleadoRef = collection(db, 'Empleados');
+export const tarifasRef = collection(db, 'Tarifas');
 
 /*Save a New registro in Firestore con metodo addDoc() este metodo no necesita o requiere un id, la base de datos lo pone por defecto*/
 export const guardarRegistro = (employed_id, input_work, output_work, status) => { addDoc(collection(db, 'RegistroLaboral'), { employed_id, input_work, output_work, status }) }
 export const guardarEmpleados = (employed_id, names, surnames, birth, email, phone) => { addDoc(collection(db, 'Empleados'), { employed_id, names, surnames, birth, email, phone}) }
+export const guardarTarifa = (job_id, description_job, price_hour) => { addDoc(collection(db, 'Tarifas'), {job_id, description_job, price_hour}) }
 
+
+//suscripcion tiempo real para consulta o vista de tabla
 export const onGetRegistroLaboral = (callback) => onSnapshot(collection(db, 'RegistroLaboral'), callback)
 export const onGetEmpleados = (callback) => onSnapshot(collection(db, 'Empleados'), callback)
-//guardarRegistro("42231772","8:00 hr..","16:00 hr.",false);
+export const onGetTarifas = (callback) => onSnapshot(collection(db, 'Tarifas'), callback)
+
 
 /*metodo getDoc 'en singular' para traer un documento de firestore */
 export const getOneEmployed          = (id)=>getDoc(doc(db,'Empleados',id))
