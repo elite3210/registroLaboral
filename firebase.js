@@ -39,14 +39,15 @@ export const getOneEmployed          = (id)=>getDoc(doc(db,'Empleados',id))
 //eliminar elemento del la coleccion:
 
 export function deleteRegistroLaboral(id){
-    deleteDoc(doc(db,'RegistroLaboral',id))
+    deleteDoc(doc(db,'RegistroLaboral',id));
 };
 
 export function deleteEmployed(id){
-    deleteDoc(doc(db,'Empleados',id))
+    deleteDoc(doc(db,'Empleados',id));
 };
 
 //actualizar firebase:
 export const updateEmployed    = (id,newFields)=>updateDoc(doc(db,'Empleados',id),newFields)
+export const updateRegistroLaboral    = (id,newFields)=>updateDoc(doc(db,'RegistroLaboral',id),newFields)
 
 

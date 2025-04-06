@@ -1,6 +1,6 @@
-import { guardarRegistro, onGetRegistroLaboral, getOneEmployed, deleteRegistroLaboral} from './firebase.js'
+import { guardarRegistro, onGetRegistroLaboral, onGetEmpleados, deleteRegistroLaboral,updateRegistroLaboral} from './firebase.js';
 import { Datatable } from './dataTable.js';
-import { formularioEmpleados,clearHTML } from './empleados.js';
+import { formularioEmpleados,clearHTML,sincronizarLocalStorage} from './empleados.js';
 
 
 //llamando a la funcion traer consulta que incluye la tabla grid js
@@ -20,6 +20,22 @@ tareaForm.addEventListener('submit', (e) => {
 
     guardarRegistro(employed_id.trim(), input_work, output_work, status);
     tareaForm.reset();
+})
+
+const empleados2 = onGetEmpleados((querySnapshot) => {
+    const items = [];
+
+    if (querySnapshot) {
+        querySnapshot.forEach(doc => {
+            let obj = {};
+            obj.id = doc.id;
+            obj.values = doc.data();
+            items.push(obj);
+        })
+    };
+
+    sincronizarLocalStorage(items,'empleadosLS');
+    renderDatalist(items);
 })
 
 
@@ -48,9 +64,7 @@ const registroLaboral = onGetRegistroLaboral((querySnapshot) => {
     const titulo = {'':'',CODIGO: 'employed_id', NOMBRES: 'nombres', ENTRADA: 'input_work', SALIDA: 'output_work' }
     const dt = new Datatable('#dataTableRegistro',
         [
-            { id: 'dtnCrear', text: 'nuevo', icon: 'post_add', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); /*createProduct()*/ } },
-            { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); /*editProduct(elementos)*/ } },
-            //{ id: 'btnBarcode', text: 'barcode', icon: 'barcode',targetModal:'#myModal', action: function () { const elementos = dt.getSelected(); pintarBarcode(elementos); } },
+            { id: 'btnEdit', text: 'editar', icon: 'edit', targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); editRegistroLaboral(elementos) } },
             { id: 'dtnDelete', text: 'delete', icon: 'delete',targetModal: '#myModal', action: function () { const elementos = dt.getSelected(); eliminarRegistroLaboral(elementos)} }
         ]
     );
@@ -68,18 +82,96 @@ function eliminarRegistroLaboral(arrayObj){
     const modalFooter = document.querySelector('.modal-footer');
     clearHTML(modalBody);
     clearHTML(modalFooter);
-    console.log('id id id ',id );
+    //console.log('id id id ',id );
     
-    modalBody.appendChild(formularioEmpleados());//funcion que renderiza el formulario para crear y editar producto
+    //modalBody.appendChild(formularioEmpleados());//funcion que renderiza el formulario para crear y editar producto
+
+    //const formModal=document.getElementById('employed-form');
+    //const btnSend=document.getElementById('btn-send');
+    //btnSend.textContent = 'Eliminar';
+    modalBody.textContent='Desea eliminar el registro de ingreso y salida?';
+
 
     const btnDelete=document.createElement('button');
     btnDelete.setAttribute('id','btn-delete');
     btnDelete.setAttribute('class','btn btn-danger');
-    btnDelete.addEventListener('click',()=>deleteRegistroLaboral(id))
+    btnDelete.addEventListener('click',()=>{
+        deleteRegistroLaboral(id);
+        const modal = bootstrap.Modal.getInstance(document.querySelector('#myModal'));
+        modal.hide();
+    })
     modalFooter.appendChild(btnDelete);           
     btnDelete.textContent = 'Eliminar'
 
     
 }
+
+function renderDatalist(items) {
+    const datalist = document.getElementById('colaborador');
+    clearHTML(datalist);
+    let html ='';
+
+    items.forEach(element => {
+        html +=`
+        <option value=${element['values'].employed_id}>${element['values'].names}</option>
+        `
+    });
+
+    datalist.innerHTML=html;
+
+}
+
+function editRegistroLaboral(elementos){
+    console.log('se actualizará:',elementos.id);
+    
+    const modalBody = document.querySelector('.modal-body');
+    const modalFooter = document.querySelector('.modal-footer');
+    clearHTML(modalBody);
+    clearHTML(modalFooter);
+
+    const formularioRegistroHTML=`
+            <form id="formRegistro" class="form">
+
+                <div class="input-group">
+                    <label for="employed_id">DNI:</label>
+                    <input type="text" list="colaborador" name="car" id="employed_id" disabled>
+                </div>
+                <div class="input-group">
+                    <label for="input_work">Entrada :</label>
+                    <input class="fecha" type="datetime-local" id='input_work' required>
+                </div>
+                <div class="input-group">
+                    <label for="output_work">Salida :</label>
+                    <input class="fecha" type="datetime-local" id='output_work' required>
+                </div>
+            </form>
+`
+modalBody.innerHTML=formularioRegistroHTML;
+
+const registroForm = document.getElementById('formRegistro');
+
+registroForm['employed_id'].value=elementos['values'].employed_id;
+registroForm['input_work'].value = elementos['values'].input_work;
+registroForm['output_work'].value=elementos['values'].output_work;
+
+const btnUpdate=document.createElement('button');
+    btnUpdate.setAttribute('id','btn-Update');
+    btnUpdate.setAttribute('class','btn btn-danger');
+    btnUpdate.textContent='Actualizar';
+    modalFooter.appendChild(btnUpdate);
+
+    btnUpdate.addEventListener('click',()=>{
+        const input_work = registroForm['input_work'].value;
+        const output_work = registroForm['output_work'].value;
+        const id = elementos.id;
+        updateRegistroLaboral(id,{input_work:input_work,output_work:output_work});
+        const modal = bootstrap.Modal.getInstance(document.querySelector('#myModal'));
+        modal.hide();   
+    })
+    
+}
+
+
+
 
 
