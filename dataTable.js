@@ -121,10 +121,12 @@ export class Datatable {
         <div class="datatable-container">
             <div class="header-tools">
                 <div class="search"><input type="text" class="search-input"></div>
+                <label for="Dats">Datos Registrados:</label>
                 <div class="tools">
                     <ul class="header-buttons-container">
                     </ul>
                 </div>
+                
             </div>
         
             <table id="dataTable" class="datatable">
