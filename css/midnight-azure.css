@@ -529,3 +529,12 @@ button[data-page] {
     color: #0A192F;
     font-weight: 600;
   }
+
+  .team-section {
+    
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    
+  }
