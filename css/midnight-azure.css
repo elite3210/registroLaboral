@@ -860,3 +860,13 @@ button[data-page] {
       max-width: 100%;
     }
   }
+
+  .datatable-checkbox {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
