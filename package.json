@@ -4,7 +4,7 @@
   "description": "Sistema para registro de jornada laboral",
   "main": "index.js",
   "scripts": {
-    "test": ""
+    "test": "jest"
   },
   "author": "",
   "license": "ISC"
