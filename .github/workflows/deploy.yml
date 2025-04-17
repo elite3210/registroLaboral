@@ -1,0 +1,21 @@
+name: CI/CD para JavaScript Vanilla en GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Se activara cada vez que se haga push a main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Subir a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .                # carpeta donde está el index.html
+          publish_branch: gh-pages     # rama donde se publicará el contenido
