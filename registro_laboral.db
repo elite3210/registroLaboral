@@ -1,0 +1,29 @@
+CREATE DATABASE registro_laboral;
+
+USE registro_laboral;
+
+CREATE TABLE empleados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employed_id VARCHAR(10) NOT NULL UNIQUE,
+    names VARCHAR(100) NOT NULL,
+    surnames VARCHAR(100) NOT NULL,
+    birth DATE,
+    email VARCHAR(100),
+    phone VARCHAR(15)
+);
+
+CREATE TABLE tarifas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_id VARCHAR(10) NOT NULL UNIQUE,
+    description_job VARCHAR(100) NOT NULL,
+    price_hour DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE registro_laboral (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employed_id VARCHAR(10) NOT NULL,
+    input_work DATETIME NOT NULL,
+    output_work DATETIME NOT NULL,
+    status BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (employed_id) REFERENCES empleados(employed_id)
+);
