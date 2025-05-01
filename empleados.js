@@ -1,7 +1,6 @@
 import {guardarEmpleados, onGetEmpleados, updateEmployed, deleteEmployed } from './firebase.js'
 import { Datatable } from './dataTable.js';
 
-
 let editStatus = false;
 //traer los datos de la coleccion Registrolaboral
 const empleados = onGetEmpleados((querySnapshot) => {
@@ -219,4 +218,18 @@ function viewEmpleado(arrayObj){
 
     const modalFooter = document.querySelector('.modal-footer');
     clearHTML(modalFooter);
+}
+
+async function guardarEmpleado(employed_id, names, surnames, birth, email, phone) {
+    const response = await fetch('/api/empleados', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employed_id, names, surnames, birth, email, phone })
+    });
+    return await response.json();
+}
+
+async function obtenerEmpleados() {
+    const response = await fetch('/api/empleados');
+    return await response.json();
 }
