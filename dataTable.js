@@ -12,7 +12,7 @@ export class Datatable {
 
     constructor(selector, headerButtons) {
         this.element = document.querySelector(selector);
-        this.headers = '';//titulo de la tabla
+        this.headers = []; // Cambiado a un arreglo vacío
         this.footer = '';
         this.items = [];
         this.pagination = { total: 0, noItemsPerPage: 0, noPages: 0, actual: 0, pointer: 0, diff: 0, lastPageBeforeDots: 0, noButtonsBeforeDots: 4 };
@@ -720,5 +720,12 @@ export class Datatable {
         this.items = data;
         this.footer = totals;
     };
+
+    filterRows(searchText) {
+        const lowerCaseSearchText = searchText.toLowerCase();
+        this.items = this.items.filter(item =>
+            item.values.some(value => value.toLowerCase().includes(lowerCaseSearchText))
+        );
+    }
     //this.add() falta implementar este metodo, sirve para adicionar una fila que no viene desde la base de datos, se agrega en frontend
 };

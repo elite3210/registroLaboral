@@ -1,26 +1,30 @@
-name: Simple
+name: CI/CD - Ejecutar Pruebas Automáticas
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # Ejecutar en cada push a la rama main
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] # Ejecutar en cada pull request a la rama main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
+      # Paso 1: Clonar el repositorio
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
+      # Paso 2: Configurar Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'  # Puedes usar la versión de Node.js que prefieras
+          node-version: '18' # Usa la versión de Node.js que prefieras
 
+      # Paso 3: Instalar dependencias
       - name: Install dependencies
-        run: npm install  # Si estás usando Firebase o cualquier otro paquete, se instalarán aquí
+        run: npm install
 
+      # Paso 4: Ejecutar pruebas
       - name: Run tests
-        run: npm test  # Si tienes pruebas configuradas, ejecuta npm test
+        run: npm test
