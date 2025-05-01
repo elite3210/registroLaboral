@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pruebas de Empleado</title>
+</head>
+
+<body>
+
+    <h1>Resultados de las Pruebas</h1>
+    <div id="resultados"></div>
+    <script src="./employee.js"></script>
+    <script>
+        function assertEqual(actual, expected, message) {
+            if (actual === expected) {
+                mostrarResultado(`✅ Prueba pasada: ${message}`);
+            } else {
+                mostrarResultado(`❌ Prueba fallida: ${message} - Esperado: ${expected}, Obtenido: ${actual}`);
+            }
+        }
+
+        function assertThrows(fn, expectedError, message) {
+            try {
+                fn();
+                mostrarResultado(`❌ Prueba fallida: ${message} - No se lanzó ningún error.`);
+            } catch (error) {
+                if (error.message === expectedError) {
+                    if (error.message === expectedError) {
+                        mostrarResultado(`✅ Prueba pasada: ${message}`);
+                    } else {
+                        mostrarResultado(`❌ Prueba fallida: ${message} - Error incorrecto: Esperado "${expectedError}", Obtenido "${error.message}"`);
+                    }
+                }
+            }
+        }
+
+        function mostrarResultado(texto) {
+            const resultadosDiv = document.getElementById('resultados');
+            const parrafo = document.createElement('p');
+            parrafo.innerHTML = texto;
+            resultadosDiv.appendChild(parrafo);
+        }
+
+        describe('Empleado', () => {
+            it('debería calcular correctamente el pago para un empleado con horas y tarifa', () => {
+                const empleado = { tarifaPorHora: 10, horasTrabajadas: 8 };
+                const pago = calcularPago(empleado.tarifaPorHora, empleado.horasTrabajadas);
+                assertEqual(pago, 80, 'Cálculo básico de pago');
+            });
+
+            it('debería calcular correctamente el pago incluyendo horas extras', () => {
+                const empleado = { tarifaPorHora: 10, horasTrabajadas: 10 };
+                const pago = calcularPago(empleado.tarifaPorHora, empleado.horasTrabajadas);
+                assertEqual(pago, 110, 'Cálculo con horas extras');
+            });
+
+            it('debería lanzar un error si la tarifa por hora es negativa', () => {
+                const empleado = { tarifaPorHora: -5, horasTrabajadas: 8 };
+                assertThrows(() => calcularPago(empleado.tarifaPorHora, empleado.horasTrabajadas), 'La tarifa por hora no puede ser negativa.', 'Tarifa por hora negativa');
+            });
+        });
+
+        function describe(nombreSuite, pruebas) {
+            mostrarResultado(`<h2>Suite de Pruebas: ${nombreSuite}</h2>`);
+            pruebas();
+        }
+
+        function it(nombrePrueba, funcionPrueba) {
+            funcionPrueba();
+        }
+    </script>
+    
+</body>
+
+</html>
