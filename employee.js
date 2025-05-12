@@ -18,3 +18,6 @@ function calcularPago(tarifaPorHora, horasTrabajadas) {
     const pagoExtra = calcularPagoExtra(tarifaPorHora, horasExtras);
     return pagoNormal + pagoExtra;
 }
+
+// Exportar las funciones
+module.exports = { calcularPago, calcularPagoExtra, validarTarifaPorHora };

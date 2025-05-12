@@ -200,6 +200,7 @@ const email = formModal['email'].value;
 const phone = formModal['phone'].value;
 }
 
+
 function viewEmpleado(arrayObj){
     let id = arrayObj.id;
     crearModalEmpleado(id);
@@ -220,3 +221,4 @@ function viewEmpleado(arrayObj){
     const modalFooter = document.querySelector('.modal-footer');
     clearHTML(modalFooter);
 }
+

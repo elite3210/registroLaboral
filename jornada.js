@@ -5,7 +5,6 @@ import { formularioEmpleados, clearHTML, sincronizarLocalStorage } from './emple
 // Función para mostrar errores
 function mostrarError(mensaje, error = null) {
     console.error(`Error: ${mensaje}`, error);
-    // Puedes implementar una notificación visual para el usuario
     alert(`Error: ${mensaje}`);
 }
 
@@ -202,29 +201,14 @@ function eliminarRegistroLaboral(arrayObj) {
 }
 
 function renderDatalist(items) {
-    try {
-        const datalist = document.getElementById('colaborador');
-        if (!datalist) {
-            throw new Error('No se encontró el elemento datalist con ID "colaborador"');
-        }
-        
-        clearHTML(datalist);
-        let html = '';
-
-        if (items && Array.isArray(items)) {
-            items.forEach(element => {
-                if (element && element['values'] && element['values'].employed_id && element['values'].names) {
-                    html += `
-                    <option value=${element['values'].employed_id}>${element['values'].names}</option>
-                    `;
-                }
-            });
-        }
-
-        datalist.innerHTML = html;
-    } catch (error) {
-        mostrarError('Error al renderizar la lista de colaboradores', error);
+    const datalist = document.getElementById('colaborador');
+    if (!datalist) {
+        throw new Error('No se encontró el elemento datalist con ID "colaborador"');
     }
+
+    datalist.innerHTML = items.map(item => 
+        `<option value="${item.values.employed_id}">${item.values.names}</option>`
+    ).join('');
 }
 
 function editRegistroLaboral(elementos) {
